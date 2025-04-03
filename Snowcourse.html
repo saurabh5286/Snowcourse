@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SK Adventures</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#2563eb',
+secondary: '#f59e0b'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+.weather-widget {
+backdrop-filter: blur(8px);
+background: rgba(255, 255, 255, 0.1);
+}
+.review-modal {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.5);
+z-index: 1000;
+}
+.snowflake {
+position: absolute;
+color: white;
+font-size: 1em;
+text-shadow: 0 0 1px rgba(0,0,0,0.3);
+animation: fall linear forwards;
+pointer-events: none;
+}
+@keyframes fall {
+to {
+transform: translateY(100vh) rotate(360deg);
+}
+}
+.snow-container {
+position: absolute;
+width: 100%;
+height: 100vh;
+overflow: hidden;
+pointer-events: none;
+z-index: 1;
+}
+</style>
+</head>
+<body class="bg-white min-h-screen">
+<header class="fixed w-full z-50 bg-transparent">
+<nav class="container mx-auto px-6 py-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<div class="h-10 w-10 rounded-full bg-white flex items-center justify-center mr-2">
+<img src="https://static.readdy.ai/image/562136c073cb1db2e20fda7e33d0be7a/5875ecded9dda3269fb99b1aa2ffd87b.jpeg" alt="SK Adventures" class="h-8 w-8 object-cover rounded-full">
+</div>
+<div class="text-2xl font-['Pacifico'] text-white">SK Adventures</div>
+</div>
+<div class="flex items-center space-x-8">
+<a href="#" class="text-white hover:text-secondary cursor-pointer">Home</a>
+<a href="#" class="text-white hover:text-secondary cursor-pointer">Courses</a>
+<a href="#" class="text-white hover:text-secondary cursor-pointer">Contact</a>
+<button class="bg-secondary text-white px-6 py-2 !rounded-button cursor-pointer">Book Now</button>
+</div>
+</div>
+</nav>
+</header>
+<section class="relative h-screen">
+<div class="snow-container" id="snowContainer"></div>
+<img src="https://public.readdy.ai/ai/img_res/4c47a095baf7e5ee9c146856789d5ed8.jpg"
+class="w-full h-full object-cover" alt="Snowboarding Course">
+<div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent">
+<div class="container mx-auto px-6 h-full flex items-center">
+<div class="max-w-2xl text-white">
+<div class="flex items-center space-x-4 mb-4">
+<span class="bg-secondary px-4 py-1 !rounded-button">Intermediate</span>
+<div class="flex items-center">
+<i class="ri-time-line mr-2"></i>
+<span>2 Days</span>
+</div>
+<div class="flex items-center">
+<i class="ri-money-dollar-circle-line mr-2"></i>
+<span>$299</span>
+</div>
+</div>
+<h1 class="text-5xl font-bold mb-6">Snowboarding Adventure</h1>
+<p class="text-xl mb-8">Master the slopes with our professional instructors in the heart of the Rocky Mountains.</p>
+<div class="flex space-x-6">
+<div class="text-center">
+<div class="text-3xl font-bold">2,800m</div>
+<div class="text-sm">Elevation</div>
+</div>
+<div class="text-center">
+<div class="text-3xl font-bold">5.2km</div>
+<div class="text-sm">Trail Length</div>
+</div>
+<div class="text-center">
+<div class="text-3xl font-bold">8</div>
+<div class="text-sm">Group Size</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="weather-widget absolute top-4 right-4 text-white p-4 rounded-lg">
+<div class="flex items-center space-x-4">
+<i class="ri-sun-line text-3xl"></i>
+<div>
+<div class="text-2xl font-bold">-2°C</div>
+<div class="text-sm">Sunny</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 bg-white">
+<div class="container mx-auto px-6">
+<div class="flex mb-8 border-b">
+<button class="px-8 py-4 text-primary border-b-2 border-primary cursor-pointer">Overview</button>
+<button class="px-8 py-4 text-gray-500 hover:text-primary cursor-pointer">Requirements</button>
+<button class="px-8 py-4 text-gray-500 hover:text-primary cursor-pointer">Schedule</button>
+</div>
+<div class="grid grid-cols-3 gap-8">
+<div class="col-span-2">
+<h2 class="text-3xl font-bold mb-6">Course Description</h2>
+<p class="text-gray-600 mb-6">Join us for an unforgettable snowboarding adventure designed for intermediate riders looking to take their skills to the next level. Our experienced instructors will guide you through advanced techniques, terrain navigation, and safety protocols.</p>
+<div class="mb-8">
+<h3 class="text-xl font-bold mb-4">What you'll learn</h3>
+<ul class="space-y-3">
+<li class="flex items-center">
+<i class="ri-checkbox-circle-line text-primary mr-2"></i>
+Advanced carving techniques
+</li>
+<li class="flex items-center">
+<i class="ri-checkbox-circle-line text-primary mr-2"></i>
+Terrain park fundamentals
+</li>
+<li class="flex items-center">
+<i class="ri-checkbox-circle-line text-primary mr-2"></i>
+Off-piste riding skills
+</li>
+<li class="flex items-center">
+<i class="ri-checkbox-circle-line text-primary mr-2"></i>
+Safety and avalanche awareness
+</li>
+</ul>
+</div>
+<div class="bg-gray-50 p-6 rounded-lg mb-8">
+<h3 class="text-xl font-bold mb-4">Equipment Needed</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center space-x-3">
+<i class="ri-snowboard-line text-primary"></i>
+<span>Snowboard</span>
+</div>
+<div class="flex items-center space-x-3">
+<i class="ri-boot-line text-primary"></i>
+<span>Boots</span>
+</div>
+<div class="flex items-center space-x-3">
+<i class="ri-glasses-line text-primary"></i>
+<span>Goggles</span>
+</div>
+<div class="flex items-center space-x-3">
+<i class="ri-hat-line text-primary"></i>
+<span>Helmet</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div class="bg-white shadow-lg rounded-lg p-6 sticky top-24">
+<div class="mb-6">
+<img src="https://static.readdy.ai/image/562136c073cb1db2e20fda7e33d0be7a/5875ecded9dda3269fb99b1aa2ffd87b.jpeg"
+class="w-32 h-32 rounded-full mx-auto mb-4" alt="Instructor">
+<h3 class="text-xl font-bold text-center">Saurabh Kumar</h3>
+<p class="text-gray-500 text-center">Professional Instructor</p>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span>Experience</span>
+<span class="font-bold">12 years</span>
+</div>
+<div class="flex items-center justify-between">
+<span>Certifications</span>
+<span class="font-bold">PSIA Level 3</span>
+</div>
+<div class="flex items-center justify-between">
+<span>Languages</span>
+<span class="font-bold">English, French</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 bg-gray-50">
+<div class="container mx-auto px-6">
+<h2 class="text-3xl font-bold mb-8">Location</h2>
+<div class="grid grid-cols-2 gap-8">
+<div class="bg-white rounded-lg overflow-hidden h-96">
+<img src="https://public.readdy.ai/gen_page/map_placeholder_1280x720.png"
+class="w-full h-full object-cover" alt="Location Map">
+</div>
+<div>
+<div class="bg-white p-6 rounded-lg mb-6">
+<h3 class="text-xl font-bold mb-4">Meeting Point</h3>
+<p class="text-gray-600">Rocky Mountain Resort</p>
+<p class="text-gray-600">1234 Powder Lane</p>
+<p class="text-gray-600">Aspen, CO 81611</p>
+</div>
+<div class="bg-white p-6 rounded-lg">
+<h3 class="text-xl font-bold mb-4">Important Information</h3>
+<ul class="space-y-3 text-gray-600">
+<li class="flex items-center">
+<i class="ri-parking-line mr-2"></i>
+Free parking available
+</li>
+<li class="flex items-center">
+<i class="ri-restaurant-line mr-2"></i>
+On-site cafeteria
+</li>
+<li class="flex items-center">
+<i class="ri-store-line mr-2"></i>
+Equipment rental shop
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 bg-white">
+<div class="container mx-auto px-6">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-3xl font-bold">Reviews</h2>
+<button onclick="showReviewModal()" class="bg-primary text-white px-6 py-2 !rounded-button cursor-pointer">Write a Review</button>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="review-card bg-white p-6 rounded-lg shadow">
+<div class="flex items-center mb-4">
+<img src="https://public.readdy.ai/ai/img_res/69f7bb14ea36bb9b0a5e8fe460fef528.jpg"
+class="w-12 h-12 rounded-full mr-4" alt="Reviewer">
+<div>
+<h4 class="font-bold">Sarah Thompson</h4>
+<div class="flex text-secondary">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+</div>
+</div>
+</div>
+<p class="text-gray-600">"Amazing experience! The instructor was very knowledgeable and patient. I learned so much in just two days."</p>
+</div>
+<div class="review-card bg-white p-6 rounded-lg shadow">
+<div class="flex items-center mb-4">
+<img src="https://public.readdy.ai/ai/img_res/096f13d253b4b2572180ab60a50ef1aa.jpg"
+class="w-12 h-12 rounded-full mr-4" alt="Reviewer">
+<div>
+<h4 class="font-bold">James Wilson</h4>
+<div class="flex text-secondary">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-half-fill"></i>
+</div>
+</div>
+</div>
+<p class="text-gray-600">"Great course for intermediate riders. The terrain park instruction was particularly helpful."</p>
+</div>
+</div>
+</div>
+</section>
+<footer class="bg-gray-900 text-white py-16">
+<div class="container mx-auto px-6">
+<div class="grid grid-cols-4 gap-8">
+<div>
+<h3 class="text-xl font-bold mb-4">Emergency Contact</h3>
+<p class="mb-2">24/7 Support Line:</p>
+<p class="text-secondary">1-800-SNOW-HELP</p>
+</div>
+<div>
+<h3 class="text-xl font-bold mb-4">Policies</h3>
+<ul class="space-y-2">
+<li><a href="#" class="hover:text-secondary cursor-pointer">Cancellation Policy</a></li>
+<li><a href="#" class="hover:text-secondary cursor-pointer">Refund Policy</a></li>
+<li><a href="#" class="hover:text-secondary cursor-pointer">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-xl font-bold mb-4">Follow Us</h3>
+<div class="flex space-x-4">
+<a href="#" class="hover:text-secondary cursor-pointer"><i class="ri-facebook-fill"></i></a>
+<a href="#" class="hover:text-secondary cursor-pointer"><i class="ri-instagram-line"></i></a>
+<a href="#" class="hover:text-secondary cursor-pointer"><i class="ri-twitter-fill"></i></a>
+</div>
+</div>
+<div>
+<h3 class="text-xl font-bold mb-4">Newsletter</h3>
+<div class="flex">
+<input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-button w-full text-gray-900">
+<button class="bg-secondary px-6 py-2 !rounded-r-button cursor-pointer">Subscribe</button>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<div class="review-modal" id="reviewModal">
+<div class="fixed inset-0 flex items-center justify-center">
+<div class="bg-white rounded-lg p-8 max-w-md w-full">
+<h3 class="text-2xl font-bold mb-6">Write a Review</h3>
+<div class="mb-6">
+<label class="block mb-2">Rating</label>
+<div class="flex text-gray-400" id="ratingStars">
+<i class="ri-star-line cursor-pointer" data-rating="1"></i>
+<i class="ri-star-line cursor-pointer" data-rating="2"></i>
+<i class="ri-star-line cursor-pointer" data-rating="3"></i>
+<i class="ri-star-line cursor-pointer" data-rating="4"></i>
+<i class="ri-star-line cursor-pointer" data-rating="5"></i>
+</div>
+</div>
+<div class="mb-6">
+<label class="block mb-2">Your Review</label>
+<textarea class="w-full p-2 border rounded" rows="4"></textarea>
+</div>
+<div class="flex justify-end space-x-4">
+<button onclick="hideReviewModal()" class="px-6 py-2 border !rounded-button cursor-pointer">Cancel</button>
+<button onclick="submitReview()" class="bg-primary text-white px-6 py-2 !rounded-button cursor-pointer">Submit</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+function showReviewModal() {
+document.getElementById('reviewModal').style.display = 'block';
+}
+function hideReviewModal() {
+document.getElementById('reviewModal').style.display = 'none';
+}
+function submitReview() {
+hideReviewModal();
+}
+document.querySelectorAll('#ratingStars i').forEach(star => {
+star.addEventListener('mouseover', function() {
+const rating = this.dataset.rating;
+document.querySelectorAll('#ratingStars i').forEach((s, index) => {
+if (index < rating) {
+s.classList.remove('ri-star-line');
+s.classList.add('ri-star-fill');
+s.classList.add('text-secondary');
+} else {
+s.classList.add('ri-star-line');
+s.classList.remove('ri-star-fill');
+s.classList.remove('text-secondary');
+}
+});
+});
+});
+function createSnowflake() {
+const snowflake = document.createElement('div');
+snowflake.classList.add('snowflake');
+snowflake.innerHTML = '❄';
+snowflake.style.left = Math.random() * window.innerWidth + 'px';
+snowflake.style.opacity = Math.random();
+snowflake.style.fontSize = (Math.random() * 0.5 + 0.5) + 'em';
+snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+document.getElementById('snowContainer').appendChild(snowflake);
+setTimeout(() => {
+snowflake.remove();
+}, 5000);
+}
+function startSnowAnimation() {
+const density = 50;
+for(let i = 0; i < density; i++) {
+setTimeout(createSnowflake, Math.random() * 3000);
+}
+setInterval(() => {
+const density = 50;
+for(let i = 0; i < density; i++) {
+setTimeout(createSnowflake, Math.random() * 3000);
+}
+}, 3000);
+}
+startSnowAnimation();
+</script>
+</body>
+</html>
